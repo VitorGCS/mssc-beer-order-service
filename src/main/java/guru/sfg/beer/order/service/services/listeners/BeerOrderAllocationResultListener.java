@@ -19,13 +19,13 @@ public class BeerOrderAllocationResultListener {
     public void listen(AllocateOrderResult result){
         if(!result.getAllocationError() && !result.getPendingInventory()){
             //allocation normally
-            beerOrderManager.beeOrderAllocationPassed(result.getBeerOrderDto());
+            beerOrderManager.beerOrderAllocationPassed(result.getBeerOrderDto());
         }else if(!result.getAllocationError() && result.getPendingInventory()){
             //pending inventory
-            beerOrderManager.beeOrderAllocationPendingInventory(result.getBeerOrderDto());
+            beerOrderManager.beerOrderAllocationPendingInventory(result.getBeerOrderDto());
         }else if(result.getAllocationError()){
             //allocation error
-            beerOrderManager.beeOrderAllocationFailed(result.getBeerOrderDto());
+            beerOrderManager.beerOrderAllocationFailed(result.getBeerOrderDto());
         }
     }
 }

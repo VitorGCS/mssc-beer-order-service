@@ -8,6 +8,8 @@ public class BeerOrderServiceApplicationTests {
 
     @Test
     public void contextLoads() {
+        System.out.println("\n\n########################## Unit tests ##########################\n\n");
+
     }
 
 }

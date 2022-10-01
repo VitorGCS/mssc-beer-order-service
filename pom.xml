@@ -15,12 +15,25 @@
     <name>mssc-beer-order-service</name>
     <description>MSSC Beer Order Service</description>
 
-    <!--    wiremock dependency-->
+
     <dependencies>
+        <!--    embebed message broker-->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-jms-server</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--    wiremock dependency-->
         <dependency>
             <groupId>com.github.JensPiegsa</groupId>
             <artifactId>wiremock-extension</artifactId>
             <version>0.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

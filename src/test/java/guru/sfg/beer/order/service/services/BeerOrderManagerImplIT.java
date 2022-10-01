@@ -28,8 +28,10 @@ import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.awaitility.Awaitility.await;
+import static org.jgroups.util.Util.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+//import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(WireMockExtension.class)
 @SpringBootTest
@@ -50,14 +52,13 @@ public class BeerOrderManagerImplIT {
     @Autowired
     WireMockServer wireMockServer;
 
-    Customer testcustomer;
+    Customer testCustomer;
 
     UUID beerId = UUID.randomUUID();
 
     //As we run our different test methods, this can be brought into the Spring Context and be available for us
     @TestConfiguration
     static class RestTemplateBuilderProvider{
-
         @Bean(destroyMethod = "stop")
         public WireMockServer wireMockServer(){
             WireMockServer server = with(wireMockConfig().port(8083));
@@ -69,13 +70,15 @@ public class BeerOrderManagerImplIT {
 
     @BeforeEach
     void setUp() {
-        testcustomer = customerRepository.save(Customer.builder()
+        testCustomer = customerRepository.save(Customer.builder()
                 .customerName("Test Customer")
                 .build());
     }
 
     @Test
-    void testNewToAllocated() throws JsonProcessingException {
+    void testNewToAllocated() throws JsonProcessingException, InterruptedException {
+        System.out.println("\n\n########################## IT tests ##########################\n\n");
+
         BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
 
         wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1+ "12345")
@@ -84,12 +87,36 @@ public class BeerOrderManagerImplIT {
         BeerOrder beerOrder = createBeerOrder();
         BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
 
+/*
+        System.out.println("Sleeping........");
+        Thread.sleep(4000);
+        System.out.println("Awake........");
+*/
+
+        //await() - pause the test while JMS messages are processed
+        await().untilAsserted( () -> {
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+            assertEquals(BeerOrderStatusEnum.ALLOCATED, foundOrder.getOrderStatus());
+        });
+
+        await().untilAsserted( ()  -> {
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+            BeerOrderLine line = foundOrder.getBeerOrderLines().iterator().next();
+            assertEquals(line.getOrderQuantity(), line.getQuantityAllocated());
+        });
+
+        BeerOrder savedBeerOrder2 = beerOrderRepository.findById(savedBeerOrder.getId()).get();
+
         assertNotNull(savedBeerOrder);
-        assertEquals(BeerOrderStatusEnum.ALLOCATED, savedBeerOrder.getOrderStatus());
+        assertEquals(BeerOrderStatusEnum.ALLOCATED, savedBeerOrder2.getOrderStatus());
+
+        savedBeerOrder2.getBeerOrderLines().forEach( line  -> {
+            assertEquals(line.getOrderQuantity(), line.getQuantityAllocated());
+        });
     }
 
     public BeerOrder createBeerOrder(){
-        BeerOrder beerOrder= BeerOrder.builder().customer(testcustomer).build();
+        BeerOrder beerOrder= BeerOrder.builder().customer(testCustomer).build();
         Set<BeerOrderLine> lines = new HashSet<>();
         lines.add(BeerOrderLine.builder()
             .beerId(beerId)
