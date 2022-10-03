@@ -30,7 +30,7 @@ public class  BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<
                 .end(BeerOrderStatusEnum.DELIVERED)
                 .end(BeerOrderStatusEnum.DELIVERY_EXCEPTION)
                 .end(BeerOrderStatusEnum.VALIDATED_EXCEPTION)
-                .end(BeerOrderStatusEnum.ALLOCATED_EXCEPTION);
+                .end(BeerOrderStatusEnum.ALLOCATION_EXCEPTION);
     }
 
    /*
@@ -56,7 +56,7 @@ public class  BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<
                 .and().withExternal()
                 .source(BeerOrderStatusEnum.ALLOCATION_PENDING).target(BeerOrderStatusEnum.ALLOCATED).event(BeerOrderEventEnum.ALLOCATION_SUCCESS)
                 .and().withExternal()
-                .source(BeerOrderStatusEnum.ALLOCATION_PENDING).target(BeerOrderStatusEnum.ALLOCATED_EXCEPTION).event(BeerOrderEventEnum.ALLOCATION_FAILED)
+                .source(BeerOrderStatusEnum.ALLOCATION_PENDING).target(BeerOrderStatusEnum.ALLOCATION_EXCEPTION).event(BeerOrderEventEnum.ALLOCATION_FAILED)
                 .and().withExternal()
                 .source(BeerOrderStatusEnum.ALLOCATION_PENDING).target(BeerOrderStatusEnum.PENDING_INVENTORY).event(BeerOrderEventEnum.ALLOCATION_NO_INVENTORY)
                 .and().withExternal()
