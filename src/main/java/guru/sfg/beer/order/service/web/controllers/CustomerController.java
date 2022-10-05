@@ -8,10 +8,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/customers/")
+@RestController
 public class CustomerController {
     private static final Integer DEFAULT_PAGE_NUMBER =0;
     private static final Integer DEFAULT_PAGE_SIZE =25;
