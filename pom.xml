@@ -17,6 +17,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
         <!--    embebed message broker-->
         <dependency>
             <groupId>org.apache.activemq</groupId>
