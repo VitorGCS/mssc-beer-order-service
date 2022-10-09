@@ -22,6 +22,25 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
+        <!-- Spring cloud config -> configure different environments -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+        <!-- Spring cloud Sleuth ->  distributed tracing tool for Spring Cloud -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+        <!-- logback ->  Logging Configuration (JSON encoding) -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>6.3</version>
+        </dependency>
+
         <!--    embebed message broker-->
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -41,6 +60,7 @@
             <artifactId>awaitility</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
     <repositories>
         <repository>
